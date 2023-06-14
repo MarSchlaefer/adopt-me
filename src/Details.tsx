@@ -6,14 +6,21 @@ import ErrorBoundary from "./ErrorBoundary";
 import Carousel from "./Carousel";
 import fetchPet from "./fetchPet";
 import Modal from "./Modal";
+import { PetAPIResponse } from "./APIResponsesTypes";
 
 
 const Details = () => {
+  const { id } = useParams();
+
+  if (!id) {
+    throw new Error ('no id')
+  };
+
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
-  const [_, setAdoptedPet] = useContext(AdoptedPetContext);
-  const { id } = useParams();
   const results = useQuery(["details", id], fetchPet);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_, setAdoptedPet] = useContext(AdoptedPetContext);
 
   if (results.isLoading) {
     return (
@@ -23,7 +30,10 @@ const Details = () => {
     )
   }
 
-  const pet = results.data.pets[0];
+  const pet = results?.data?.pets[0];
+  if(!pet) {
+    throw new Error('no pet')
+  };
 
   return (
     <div className="details">
@@ -54,10 +64,10 @@ const Details = () => {
   )
 };
 
-export default function DetailsErrorBoundary(props) {
+export default function DetailsErrorBoundary() {
   return (
     <ErrorBoundary>
-      <Details {...props} />
+      <Details />
     </ErrorBoundary>
   );
 }

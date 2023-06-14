@@ -1,13 +1,13 @@
-import { Component } from "react";
+import { Component, ErrorInfo, ReactElement } from "react";
 import { Link } from "react-router-dom";
 
-class ErrorBoundary extends Component {
+class ErrorBoundary extends Component<{children: ReactElement}> {
   state = { hasError: false };
   static getDerivedStateFrmoError() {
     return { hasError: true }
   };
 
-  componentDidCatch(error, info) {
+  componentDidCatch(error: Error, info: ErrorInfo) {
     // would want to insert something like Sentry/TrackJS/NewRelic here
     console.error("Error component caught an error", error, info);
   }
